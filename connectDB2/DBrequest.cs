@@ -1,6 +1,5 @@
 ﻿using connectDB2.Properties;
 using Dapper;
-
 using MySql.Data.MySqlClient;
 
 namespace connectDB2
@@ -48,7 +47,7 @@ namespace connectDB2
             {
                 ConectDB.Open();
 
-                string request = "DELETE FROM  utilisateurs WHERE @Id = @id;";
+                string request = "DELETE FROM  utilisateurs WHERE Id = @id;";
                 var deletedRows = ConectDB.Execute(request, new { id });
                 return deletedRows;
             }

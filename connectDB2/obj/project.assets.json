@@ -1823,11 +1823,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\app_desktop\\connectDB2\\connectDB2\\connectDB2.csproj",
+      "projectUniqueName": "C:\\Users\\cda07saba\\Desktop\\CRUD_C-\\connectDB2\\connectDB2.csproj",
       "projectName": "connectDB2",
-      "projectPath": "C:\\app_desktop\\connectDB2\\connectDB2\\connectDB2.csproj",
+      "projectPath": "C:\\Users\\cda07saba\\Desktop\\CRUD_C-\\connectDB2\\connectDB2.csproj",
       "packagesPath": "C:\\Users\\cda07saba\\.nuget\\packages\\",
-      "outputPath": "C:\\app_desktop\\connectDB2\\connectDB2\\obj\\",
+      "outputPath": "C:\\Users\\cda07saba\\Desktop\\CRUD_C-\\connectDB2\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

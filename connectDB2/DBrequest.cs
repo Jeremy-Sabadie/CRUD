@@ -1,5 +1,6 @@
 ﻿using connectDB2.Properties;
 using Dapper;
+
 using MySql.Data.MySqlClient;
 
 namespace connectDB2

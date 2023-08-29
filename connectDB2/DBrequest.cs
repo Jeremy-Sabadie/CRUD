@@ -78,7 +78,7 @@ namespace connectDB2
                 ConectDB.Open();
                 //Query for user creation 
                 //Variable names with "@" are filled in via the application, thus avoiding SQL injection.
-                var sql = "UPDATE db09.utilisateurs SET Nom = @Nom, Prenom=@Prenom, DtNaiss=@DtNaiss WHERE Id = @Id AND Nom = @currentNom AND Prenom=@currentPrenom AND DtNaiss=@currentDtNaiss;";
+                var sql = "UPDATE utilisateurs SET Nom = @Nom, Prenom=@Prenom, DtNaiss=@DtNaiss WHERE Id = @Id AND Nom = @currentNom AND Prenom=@currentPrenom AND DtNaiss=@currentDtNaiss;";
                 //Effectue la commande "Execute" qui retourne le nombre de ligne modifier dans la BDD. 
                 //Passage des paramétre qui iront automatiquement remplace les variables avec "@".
                 return ConectDB.Execute(sql, new { id, nom, prenom, dtNaiss, currentNom, currentPrenom, currentDtNaiss });

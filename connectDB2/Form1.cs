@@ -59,10 +59,8 @@ namespace connectDB2
             var CurrentUser = bsUtilisateurs.Current as User;
             if (CurrentUser is not null)
             {
-                string NewName = TxtNom.Text;
-                string NewPrenom = TxtPrenom.Text;
-                DateTime NewDtNaiss = dtpDtNaiss.Value;
-                _dbRequest.UpdateUser(CurrentUser.Id, NewName, NewPrenom, NewDtNaiss);
+
+                _dbRequest.UpdateUser(CurrentUser.Id, TxtNom.Text, TxtPrenom.Text, dtpDtNaiss.Value, CurrentUser.Nom, CurrentUser.Prenom, CurrentUser.DtNaiss);
                 BtActualiser.PerformClick();
             }
         }

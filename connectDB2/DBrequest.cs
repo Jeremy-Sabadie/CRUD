@@ -4,21 +4,22 @@ using MySql.Data.MySqlClient;
 
 namespace connectDB2
 {
+    //This class is dedicated to the application's various database queries.
     internal class DBrequest
     {
-
+        //This sqlConnection object ConectDB déclared as a global variable   variable is used to establish or close the connection to the database.
         MySqlConnection ConectDB;
 
         public DBrequest()
         {
-            //Connection strin stored in properties:
+            //Connection string stored in properties:
             ConectDB = new(Settings.Default.stringConnect);
         }
         public void OpenConnection()
         {
             ConectDB.Open();
         }
-
+        //Function to read the list of users.
         public IEnumerable<User> GetUsers()
         {//Oprning the connection:
             ConectDB.Open();
@@ -29,6 +30,7 @@ namespace connectDB2
             ConectDB.Close();
             return users;
         }
+        //Function to create a new user.
         public int InsertUser(string nom, string prenom, DateTime dtNaiss)
         {
             try
@@ -48,6 +50,7 @@ namespace connectDB2
                 ConectDB.Close();
             }
         }
+        //Function to delete the selected user.
         public int DeleteUser(int id)
         {
             try
@@ -65,26 +68,29 @@ namespace connectDB2
             }
         }
 
-        public int UpdateUser(int id, string NewName, string NewPrenom, DateTime NewDtNaiss)
+
+        //Function to update the selected user.
+        public int UpdateUser(int id, string nom, string prenom, DateTime dtNaiss, string currentNom, string currentPrenom, DateTime currentDtNaiss)
         {
             try
             {
-
+                ////Open connection.
                 ConectDB.Open();
-                //Condition qui vérifie que les valeurs dans la table correspondent à celles en BDD:
-
-                string request = "UPDATE utilisateurs SET Nom = @NewName, Prenom = @NewPrenom, DtNaiss=@NewDtNaiss WHERE Id=@id;";
-                //if (Current.Nom = NewName, Prenom = @NewPrenom && DtNaiss = @NewDtNaiss){
-                var deletedRows = ConectDB.Execute(request, new { id, NewName, NewPrenom, NewDtNaiss });
-                return deletedRows;
-
+                //Query for user creation 
+                //Variable names with "@" are filled in via the application, thus avoiding SQL injection.
+                var sql = "UPDATE db09.utilisateurs SET Nom = @Nom, Prenom=@Prenom, DtNaiss=@DtNaiss WHERE Id = @Id AND Nom = @currentNom AND Prenom=@currentPrenom AND DtNaiss=@currentDtNaiss;";
+                //Effectue la commande "Execute" qui retourne le nombre de ligne modifier dans la BDD. 
+                //Passage des paramétre qui iront automatiquement remplace les variables avec "@".
+                return ConectDB.Execute(sql, new { id, nom, prenom, dtNaiss, currentNom, currentPrenom, currentDtNaiss });
             }
             finally
             {
+                //Closing the connection even if the SQL query fails.
                 ConectDB.Close();
             }
-
         }
 
     }
+
 }
+

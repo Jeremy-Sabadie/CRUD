@@ -38,6 +38,7 @@ namespace connectDB2
         {
             _dbRequest.InsertUser(TxtNom.Text, TxtPrenom.Text, dtpDtNaiss.Value);
             BtActualiser.PerformClick();
+
             TxtNom.Clear();
             TxtPrenom.Clear();
 

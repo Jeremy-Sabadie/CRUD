@@ -15,10 +15,7 @@ namespace connectDB2
             //Connection string stored in properties:
             ConectDB = new(Settings.Default.stringConnect);
         }
-        public void OpenConnection()
-        {
-            ConectDB.Open();
-        }
+
         //Function to read the list of users.
         public IEnumerable<User> GetUsers()
         {//Oprning the connection:
@@ -31,24 +28,16 @@ namespace connectDB2
             return users;
         }
         //Function to create a new user.
-        public int InsertUser(string nom, string prenom, DateTime dtNaiss)
+        public int InsertUtilisateur(string nom, string prenom, DateTime dtNaiss)
         {
             try
             {
                 ConectDB.Open();
-                //New user u created:
-                User u = new();
-                //Assigning attribute name value to function argument.
-                u.Nom = nom;
-                //Tequest stored.
-                var request = "insert into utilisateurs(nom, prenom, dtNaiss) values (@nom,@prenom,@dtNaiss);";
-                //This Execute method wil return the number of created items.
-                return ConectDB.Execute(request, new { nom, prenom, dtNaiss });
+                var q = "INSERT INTO Utilisateurs (Nom,Prenom,DtNaiss) VALUES (@nom, @prenom, @dtNaiss); SELECT LAST_INSERT_ID()";
+                var result = ConectDB.Query<int>(q, new { nom, prenom, dtNaiss });
+                return result.Single();
             }
-            finally
-            {
-                ConectDB.Close();
-            }
+            finally { ConectDB.Close(); }
         }
         //Function to delete the selected user.
         public int DeleteUser(int id)

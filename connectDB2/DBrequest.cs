@@ -28,13 +28,15 @@ namespace connectDB2
             return users;
         }
         //Function to create a new user.
-        public int InsertUtilisateur(string nom, string prenom, DateTime dtNaiss)
+        public int InsertUser(string nom, string prenom, DateTime dtNaiss)
         {
             try
             {
                 ConectDB.Open();
-                var q = "INSERT INTO Utilisateurs (Nom,Prenom,DtNaiss) VALUES (@nom, @prenom, @dtNaiss); SELECT LAST_INSERT_ID()";
-                var result = ConectDB.Query<int>(q, new { nom, prenom, dtNaiss });
+                //Query to avoid errors linked to duplicate insertions.
+                var Request = "INSERT ignore INTO utilisateurs (Nom,Prenom,DtNaiss) VALUES (@nom, @prenom, @dtNaiss); SELECT LAST_INSERT_ID()";
+                var result = ConectDB.Query<int>(Request, new { nom, prenom, dtNaiss });
+                MessageBox.Show("l'utilisateur " + nom + " " + " " + prenom + " à bien été créé.");
                 return result.Single();
             }
             finally { ConectDB.Close(); }

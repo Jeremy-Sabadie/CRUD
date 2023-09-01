@@ -7,6 +7,7 @@ namespace connectDB2
     //This class is dedicated to the application's various database queries.
     internal class DBrequest
     {
+
         //This sqlConnection object ConectDB déclared as a global variable   variable is used to establish or close the connection to the database.
         MySqlConnection ConectDB;
 
@@ -28,11 +29,13 @@ namespace connectDB2
             return users;
         }
         //Function to create a new user.
-        public int InsertUser(string nom, string prenom, DateTime dtNaiss)
-        {
+        public int InsertUser(string nom, string prenom, DateTime? dtNaiss)
+        {//Ternaire pour doner null à la date si le datetimepicker est coché:
+            //User(TxtNom.text, TxtPrenom.txt, dtpDtNaiss.Checked ? dtpDtNaiss.Value : null);
             try
             {
                 ConectDB.Open();
+
                 //Query to avoid errors linked to duplicate insertions.
                 var Request = "INSERT ignore INTO utilisateurs (Nom,Prenom,DtNaiss) VALUES (@nom, @prenom, @dtNaiss); SELECT LAST_INSERT_ID()";
                 var result = ConectDB.Query<int>(Request, new { nom, prenom, dtNaiss });
@@ -60,28 +63,54 @@ namespace connectDB2
         }
 
 
+
         //Function to update the selected user.
-        public int UpdateUser(int id, string nom, string prenom, DateTime dtNaiss, string currentNom, string currentPrenom, DateTime currentDtNaiss)
+        public int UpdateUser(int id, string nom, string prenom, DateTime? dtNaiss, string currentNom, string currentPrenom, DateTime? currentDtNaiss)
         {
             try
             {
+
                 ////Open connection.
                 ConectDB.Open();
-                //Query for user creation 
-                //Variable names with "@" are filled in via the application, thus avoiding SQL injection.
-                var sql = "UPDATE utilisateurs SET Nom = @Nom, Prenom=@Prenom, DtNaiss=@DtNaiss WHERE Id = @Id AND Nom = @currentNom AND Prenom=@currentPrenom AND DtNaiss=@currentDtNaiss;";
-                //Effectue la commande "Execute" qui retourne le nombre de ligne modifier dans la BDD. 
-                //Passage des paramétre qui iront automatiquement remplace les variables avec "@".
-                return ConectDB.Execute(sql, new { id, nom, prenom, dtNaiss, currentNom, currentPrenom, currentDtNaiss });
+
+                // optimistic update query.
+                string query = "UPDATE utilisateurs SET Nom = @Nom, Prenom=@Prenom, DtNaiss=@DtNaiss WHERE  Nom = @currentNom AND Prenom=@currentPrenom AND(dtNaiss is null AND DtNaiss=@currentDtNaiss;";
+
+                // Execute the query.
+                int updated = ConectDB.Execute(query, new { id, nom, prenom, dtNaiss, currentNom, currentPrenom, currentDtNaiss });
+
+                // Check if the update was successful.
+                if (updated == 0)
+                {
+                    throw new Exception("La mise à jour de l'utilisateur a échoué.");
+
+                }
+
+                // Display a message to the user.
+                MessageBox.Show("L'utilisateur " + nom + " " + " " + prenom + " a bien été mis à jour.");
+
+                return updated;
             }
             finally
             {
+
                 //Closing the connection even if the SQL query fails.
                 ConectDB.Close();
             }
         }
+        public int UpdateOptimistUtilisateur(int id, string nom, string prenom, DateTime? dtNaiss, string oldNom, string oldPrenom, DateTime? oldDtNaiss)
+        {
+            try
+            {
+                ConectDB.Open();
+                var q = "UPDATE Utilisateurs SET Nom = @nom, Prenom = @prenom, DtNaiss = @dtNaiss WHERE Id = @id and Nom = @oldNom and Prenom = @oldPrenom and ((DtNaiss is NULL and @oldDtNaiss is null) or DtNaiss = @oldDtNaiss)";
+                var result = ConectDB.Execute(q, new { id, nom, prenom, dtNaiss, oldNom, oldPrenom, oldDtNaiss });
+                return result;
+            }
+            finally { ConectDB.Close(); }
+        }
+
 
     }
-
 }
 

@@ -57,12 +57,24 @@ namespace connectDB2
 
         private void BtUpdate_Click(object sender, EventArgs e)
         {
-            var CurrentUser = bsUtilisateurs.Current as User;
-            if (CurrentUser is not null)
-            {
+            User current = bsUtilisateurs.Current as User;
 
-                _dbRequest.UpdateUser(CurrentUser.Id, TxtNom.Text, TxtPrenom.Text, dtpDtNaiss.Value, CurrentUser.Nom, CurrentUser.Prenom, CurrentUser.DtNaiss);
-                BtActualiser.PerformClick();
+            if (current is not null)
+            {
+                // Requête classique
+                //var nb = _db.UpdateUtilisateur(current.Id, txtNom.Text, txtPrenom.Text, dtpNaiss.Value);
+                //btActualiser.PerformClick();
+
+                // Requête optimiste
+                var nb = DBrequest.UpdateOptimistUtilisateur(current.Id, TxtNom.Text, TxtPrenom.Text, dtpDtNaiss.Value, current.Nom, current.Prenom, current.DtNaiss);
+
+                if (nb == 0)
+                {
+                    MessageBox.Show("Vous ne possédez pas les dernières valeurs", "Update", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                btActualiser.PerformClick();
+
             }
         }
     }
